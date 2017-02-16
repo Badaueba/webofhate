@@ -1,0 +1,25 @@
+{
+  "name": "phaser-ang",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "alan"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-route": "^1.5.7",
+    "bootstrap": "^3.3.7",
+    "phaser": "^2.5.0",
+    "gulp": "^3.9.1"
+  }
+}
