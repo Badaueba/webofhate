@@ -15,7 +15,7 @@ var tileset;
 var layer;
 
 var myPlayer;
-var players = [];
+var players;
 
 var group;
 var oldY = 0;
@@ -27,6 +27,7 @@ var socket;
 
 function preload() {
     socket = io();
+    players = [];
 
     game.renderer.renderSession.roundPixels = true;
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -59,10 +60,10 @@ function create() {
 
     //joystick
     //pad
-    if(!game.device.desktop) {
-        game.vjoy = game.plugins.add(Phaser.Plugin.VJoy);
-        game.vjoy.inputEnable();
-    }
+    // if(!game.device.desktop) {
+    //     game.vjoy = game.plugins.add(Phaser.Plugin.VJoy);
+    //     game.vjoy.inputEnable();
+    // }
 
     //cursors
     cursors = game.input.keyboard.createCursorKeys();
@@ -77,9 +78,8 @@ function create() {
     //set player sprite
     randX = Math.floor(Math.random () * 700);
     randY = Math.floor(Math.random () * 200);
-    console.log(randX);
-    myPlayer = group.create(randY, randX, game.myPlayer.character);
-
+    myPlayer = group.create(randX, randY, game.myPlayer.character);
+    myPlayer.name = window.game.myPlayer.name;
     myPlayer.goingRight = false;
     myPlayer.goingLeft = false;
     var walkingRightAnimation = myPlayer.animations.add("walkRight", game.myPlayer.animations.walkRight);
@@ -99,12 +99,16 @@ function create() {
     buttonB.fixedToCamera = true;
 
     socket.on("connect", function (){
-        console("im connected");
+        console.log("im connected");
     });
 
+    socket.emit("join", window.game.myPlayer);
+
     socket.on("list_of_players", function (data) {
-        console.log("list_of_players");
-        console.log(data);
+        console.log('list_of_players');
+        data.forEach(function (p) {
+            createPlayer(p);
+        });
     });
 
     socket.on("remove_player", function (playerName) {
@@ -118,17 +122,24 @@ function create() {
 
     socket.on("new_player", function (data) {
         console.log("new_player");
-
-        var playerClass = window.game.players[data.character];
-        var newPlayer = group.create(200, 200, data.character);
-        newPlayer.walkingRightAnimation = myPlayer.animations.add("walkRight", playerClass.animations.walkRight);
-        var walkingLeftAnimation = myPlayer.animations.add("walkLeft", playerClass.animations.walkLeft);
-        var idleAnimation = myPlayer.animations.add("idle", playerClass.animations.idle );
-
-        players.push(data);
+        createPlayer(data);
     });
 
-    socket.emit("join", game.myPlayer);
+    socket.on("aplyMovement", movePlayers);
+
+}
+
+function createPlayer(data) {
+    if (data.name !== myPlayer.name) {
+        var playerClass = window.game.players[data.character];
+        var newPlayer = group.create(200, 200, data.character);
+        newPlayer.name = data.name;
+        newPlayer.walkingRightAnimation = newPlayer.animations.add("walkRight", playerClass.animations.walkRight);
+        var walkingLeftAnimation = newPlayer.animations.add("walkLeft", playerClass.animations.walkLeft);
+        var idleAnimation = newPlayer.animations.add("idle", playerClass.animations.idle );
+        players.push(newPlayer);
+        console.log('players', players);    
+    } 
 }
 
 function pressButtonA () {
@@ -139,6 +150,8 @@ function pressButtonB () {
 }
 
 function update() {
+    var orientation;
+    var direction = 0;  
 
     //mobile
     if (!game.device.desktop) {
@@ -170,30 +183,69 @@ function update() {
     //MOVES, ANIM
     if (myPlayer.goingLeft){
         myPlayer.animations.play("walkLeft", 4, true);
-        myPlayer.scale.x = -1;
-        myPlayer.x -= game.myPlayer.speed;
+        orientation = "walkLeft";
+        direction = -1;
+        myPlayer.scale.x = direction;
+        myPlayer.x += game.myPlayer.speed * direction;
     }
     if (myPlayer.goingRight){
-            myPlayer.animations.play("walkLeft", 4, true);
-            myPlayer.scale.x = 1;
-            myPlayer.x += game.myPlayer.speed;
+        myPlayer.animations.play("walkLeft", 4, true);
+        orientation = "walkLeft";
+        myPlayer.scale.x = 1;
+        direction = 1;
+        myPlayer.x += game.myPlayer.speed * direction;
     }
 
 
     if (myPlayer.goingDown) {
         myPlayer.animations.play("walkLeft", 4, true);
-        myPlayer.y += game.myPlayer.speed;
+        orientation = "walkLeft";
+        direction = 1;
+        myPlayer.y += game.myPlayer.speed * direction;
     }
     if (myPlayer.goingUp) {
         myPlayer.animations.play("walkLeft", 4, true);
-        myPlayer.y -= game.myPlayer.speed;
+        orientation = "walkLeft";
+        direction = -1
+        myPlayer.y += game.myPlayer.speed * direction;
     }
 
     if (!myPlayer.goingLeft && !myPlayer.goingRight && !myPlayer.goingDown && !myPlayer.goingUp)
         myPlayer.animations.play("idle", 8, true);
+    else {
+        //send inputs, anim..
+        var data = {
+            name : myPlayer.name,
+            orientation : orientation,
+            direction : direction,
+            x : myPlayer.x,
+            y : myPlayer.y,
+            speed : game.myPlayer.speed
+        };
+
+        socket.emit('playerMove', data);   
+    }
 
     group.sort('y', Phaser.Group.SORT_ASCENDING);
 
+    
+
+}
+
+function movePlayers (player) {
+
+    // console.log('movePlayers', player)
+    players.forEach( function(p, index) {
+        if (p.name == player.name){
+            console.log('p', p);
+            players[index].animations.play(player.orientation);
+            players[index].x = player.x;
+            players[index].y += player.y;
+            if (player.orientation == 'walkLeft' || player.orientation == "walkRight")
+                players[index].scale.x = player.orientation; 
+        }
+
+    });
 }
 
 function render() {

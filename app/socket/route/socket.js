@@ -9,14 +9,17 @@ function init (server) {
     io.on("connection", function (socket){
         console.log("new connection");
         socket.on("join", function (data){
-            console.log("someone join");
-            console.log(data);
             socket.nickname = data.name;
-            var player = {"name" : data.name, "character" : data.character};
-            players.push(player);
+            console.log('join', data);
+            players.push(data);
             socket.emit("list_of_players", players);
-            socket.broadcast.emit("new_player", player);
-            console.log(players);
+            socket.broadcast.emit("new_player", data);
+            // console.log(players);
+        });
+
+        socket.on('playerMove', function (data){
+            console.log('playerMove', data);
+            socket.broadcast.emit('aplyMovement', data);
         });
     });
 

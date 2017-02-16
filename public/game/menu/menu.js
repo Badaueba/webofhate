@@ -4,8 +4,7 @@ var Menu = {
     preload : preload,
     create : create,
     update : update,
-    selectionDwight : selectionDwight,
-    selectionRoo : selectionRoo
+    selection : selection,
 };
 
 var players = {
@@ -49,31 +48,26 @@ function create () {
     };
     text = game.add.text(0, 0, "Select your character", style);
     text.setTextBounds(0, 50, 500, 100);
+    text.x = Math.floor(this.width / 2 - 100);
 
-    dwight = this.add.button(window.game.width / 2 , 200, 'dwight', this.selectionDwight, this);
-    roo = this.add.button(window.game.width / 2 - 90, 200, 'roo', this.selectionRoo, this);
-
+    var dwightButton = this.add.button(window.game.width / 2 , 200, 'dwight', this.selection, this);
+    dwightButton.player = players.dwight;
+    var rooButton = this.add.button(window.game.width / 2 - 90, 200, 'roo', this.selection, this);
+    rooButton.player = players.roo;
 }
 
 function update () {
-    text.x = Math.floor(this.width / 2 - 100);
+    
 }
 
-function selectionDwight () {
+function selection(button) {
+    var player = button.player;
     if (!game.device.desktop) {
         window.game.scale.startFullScreen(false);
     }
     window.game.players = players;
-    players.dwight.name = window.localStorage.getItem("username");
-    window.game.myPlayer = players.dwight;
+    window.game.myPlayer = player;
+    window.game.myPlayer.name = window.localStorage.getItem("username");
     window.game.state.start("Gameplay");
 }
-function selectionRoo () {
-    if (!game.device.desktop) {
-        window.game.scale.startFullScreen(false);
-    }
-    window.game.players = players;
-    players.roo.name = window.localStorage.getItem("username");
-    window.game.myPlayer = players.roo;
-    window.game.state.start("Gameplay");
-}
+
