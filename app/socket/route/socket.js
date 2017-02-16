@@ -13,13 +13,14 @@ function init (server) {
             console.log('join', data);
             players.push(data);
             socket.emit("list_of_players", players);
-            socket.broadcast.emit("new_player", data);
+            socket.broadcast.emit("list_of_players", players);
             // console.log(players);
         });
 
         socket.on('playerMove', function (data){
             console.log('playerMove', data);
-            socket.broadcast.emit('aplyMovement', data);
+            socket.broadcast.emit('movementEvent', data);
+            socket.emit('movementEvent', data);
         });
     });
 
