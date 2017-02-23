@@ -1,5 +1,11 @@
+var Gameplay = require('../gameplay/gameplay');
+var data = require('../main/data.js');
+
+
 module.exports = function () {
     var game = window.game;
+
+    var classes = data.classes;
 
     var Menu = {
         preload : preload,
@@ -7,30 +13,6 @@ module.exports = function () {
         update : update,
         selection : selection,
     };
-
-    var players = {
-        roo : {
-            name : '',
-            character : 'roo',
-            animations : {
-                walkLeft : [18, 19, 20],
-                walkRight : [18, 19, 20],
-                idle : [0, 1, 2, 3]
-            },
-            speed : 3
-        },
-
-        dwight : {
-            name : '',
-            character : 'dwight',
-            animations : {
-                walkLeft : [6, 7],
-                walkRight : [6, 7],
-                idle : [0, 1, 2, 3]
-            },
-            speed : 1.5
-        }
-    }
 
     function preload () {
         game.load.image('dwight', 'game/sprites/dwight_avatar.png');
@@ -52,9 +34,9 @@ module.exports = function () {
         text.x = Math.floor(this.width / 2 - 100);
 
         var dwightButton = this.add.button(window.game.width / 2 , 200, 'dwight', this.selection, this);
-        dwightButton.player = players.dwight;
+        dwightButton.player = classes.dwight;
         var rooButton = this.add.button(window.game.width / 2 - 90, 200, 'roo', this.selection, this);
-        rooButton.player = players.roo;
+        rooButton.player = classes.roo;
     }
 
     function update () {
@@ -66,9 +48,9 @@ module.exports = function () {
         if (!game.device.desktop) {
             window.game.scale.startFullScreen(false);
         }
-        window.game.players = players;
-        window.game.myPlayer = player;
-        window.game.myPlayer.name = window.localStorage.getItem("username");
+        window.game.players = classes;
+        data.myself = player;
+        myself.name = window.localStorage.getItem("username");
         window.game.state.start("Gameplay");
     }
 

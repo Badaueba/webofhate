@@ -8,6 +8,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var path = require("path");
 var http = require("http");
+var pug = require('pug');
 
 mongoose.connect(dataConfig.database);
 
@@ -16,6 +17,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extend: true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.set('view engine', 'pug');
 
 //configure our app tho handle CORS requests
 app.use(function (req, res, next) {
@@ -29,7 +31,8 @@ var auth = require("./app/auth/route/auth");
 app.use("/auth", auth);
 
 app.use("*", function (req, res) {
-    res.sendFile(path.join( __dirname + "/public/index.html"))
+    // res.sendFile(path.join( __dirname + "/public/index.html"));
+    res.render(__dirname + '/app/views/index', {title : 'web of hate | multiplayer game'});
 })
 
 var server = http.createServer(app);

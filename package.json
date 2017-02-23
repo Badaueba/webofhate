@@ -17,6 +17,7 @@
     "jsonwebtoken": "^7.0.1",
     "mongoose": "^4.5.3",
     "morgan": "^1.7.0",
+    "pug": "^2.0.0-beta11",
     "socket.io": "^1.7.2"
   },
   "devDependencies": {

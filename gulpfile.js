@@ -8,8 +8,8 @@ var browserify = require('browserify');
 var watchify = require('watchify');
 
 var path = {
-    src : 'public/game',
-    dest : 'public/'
+    src : './game/',
+    dest : './public/'
 };
 
 function browserifyTask() {
