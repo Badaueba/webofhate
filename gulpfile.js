@@ -61,7 +61,7 @@ gulp.task('js', function () {
     watcher.on('update', function () {
         // browserifyTask();
         bundle(watcher);
-        gutil.log();
+        // gutil.log();
     });
     
     watcher.on('log', function() {
