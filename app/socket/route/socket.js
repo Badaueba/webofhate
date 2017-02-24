@@ -13,6 +13,10 @@ function init (server) {
             socket.nickname = data.name;
             userID = socket.id;
             data.userID = userID;
+            var x = Math.floor(Math.random() * 300);
+            var y = Math.floor(Math.random() * 300);
+            data.x = x;
+            data.y = y;
             players.push(data);
             socket.broadcast.emit("new_player", data);
         });
@@ -22,9 +26,9 @@ function init (server) {
         });
 
         socket.on('playerMove', function (data){
-            console.log('playerMove', data);
-            socket.broadcast.emit('movementEvent', data);
-            socket.emit('movementEvent', data);
+            console.log('playerMove', data.name);
+            socket.broadcast.emit('move_event', data);
+            socket.emit('move_event', data);
         });
 
         socket.on("disconnect", function (socket){

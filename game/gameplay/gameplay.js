@@ -1,9 +1,9 @@
-var data;
+var mainData;
 
 module.exports = function () {
-    data = require('../main/data'); 
+    mainData = require('../main/data'); 
 
-    var game = data.game;
+    var game = mainData.game;
 
     var gameplay = {
         preload : preload,
@@ -35,8 +35,8 @@ module.exports = function () {
         socket = io();
         players = [];
         
-        group = new Phaser.Group(data.game, null, 'playersGroup', true, false, 0);
-        data.playersGroup = group;
+        group = new Phaser.Group(mainData.game, null, 'playersGroup', true, false, 0);
+        mainData.playersGroup = group;
 
         game.renderer.renderSession.roundPixels = true;
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -83,26 +83,10 @@ module.exports = function () {
         socket.on('move_event', moveEvent);
 
         socket.emit("join", {
-            name : data.myself.name,
-            character : data.myself.character
+            name : mainData.myself.name,
+            character : mainData.myself.character
         });
         socket.emit('list_of_players');
-
-        // socket.on("remove_player", function (playerName) {
-        //     console.log("removing: " + playerName);
-        //     players.forEach (function (player, index) {
-        //         if (player.name == playerName) {
-        //             players.splice(index, 1);
-        //         }
-        //     });
-        // });
-
-        // socket.on("new_player", function (data) {
-        //     console.log("new_player");
-        //     createPlayer(data);
-        // });
-
-        // socket.on("movementEvent", movementEvent);
 
     }
 
@@ -150,50 +134,61 @@ module.exports = function () {
         // var orientation;
         // var direction = 1;  
         // //desktop
-        // //LEFT
-        // if (cursors.left.isDown) {
-        //     myPlayer.goingLeft = true;
-        //     direction = -1;
-        // }
-        // else myPlayer.goingLeft = false;
+        //LEFT
+        var direction = 1;
+        var anim = "idle";
 
-        // if (cursors.right.isDown) {
-        //     myPlayer.goingRight = true;
-        //     direction = 1;
-        // }
-        // else myPlayer.goingRight = false;
+        if (cursors.left.isDown) {
+            mainData.myself.goingLeft = true;
+            anim = 'walkLeft'
+            direction = -1;
+        }
+        else mainData.myself.goingLeft = false;
 
-        // if (cursors.up.isDown) {
-        //     myPlayer.goingUp = true;
-        // }
-        // else myPlayer.goingUp = false;
+        if (cursors.right.isDown) {
+            mainData.myself.goingRight = true;
+            anim = 'walkRight';
+            direction = 1;
+        }
+        else mainData.myself.goingRight = false;
 
-        // if (cursors.down.isDown) {
-        //     myPlayer.goingDown = true;
-        // }
-        // else myPlayer.goingDown = false;
+        if (cursors.up.isDown) {
+            anim = 'walkLeft';
+            mainData.myself.goingUp = true;
+            direction = -1;
+        }
+        else mainData.myself.goingUp = false;
 
-        // //MOVES, ANIM
+        if (cursors.down.isDown) {
+            anim = 'walkLeft';
+            mainData.myself.goingDown = true;
+            direction = 1;
+        }
+        else mainData.myself.goingDown = false;
 
-        // if (!myPlayer.goingLeft && !myPlayer.goingRight && !myPlayer.goingDown && !myPlayer.goingUp)
-        //     // myPlayer.animations.play("idle", 8, true);
-        //     myPlayer.goingDown = myPlayer.goingDown;
-        // else {
-        //     //send inputs, anim..
-        //     var data = {
-        //         name : myPlayer.name,
-        //         orientation : orientation,
-        //         direction : direction,
-        //         x : myPlayer.x,
-        //         y : myPlayer.y,
-        //         speed : game.myPlayer.speed
-        //     };
 
-        //     socket.emit('playerMove', data);   
-        // }
+        if (!mainData.myself.goingLeft && !mainData.myself.goingRight && !mainData.myself.goingDown && !mainData.myself.goingUp) {
+            anim = 'idle';
+        }
+        else {
+            //send inputs, anim..
+            var data = {
+                name : mainData.myself.name,
+                direction : direction,
+                goingRight : mainData.myself.goingRight,
+                goingLeft : mainData.myself.goingLeft,
+                goingUp : mainData.myself.goingUp,
+                goingDown : mainData.myself.goingDown,
+                x : mainData.myself.x,
+                y : mainData.myself.y,
+                anim : anim,
+                speed : mainData.myself.speed
+            };
 
-        // updateMoves();
-        data.playersGroup.sort('y', Phaser.Group.SORT_ASCENDING);
+            socket.emit('playerMove', data);   
+        }
+
+        mainData.playersGroup.sort('y', Phaser.Group.SORT_ASCENDING);
     }
 
     function updateMoves () {
