@@ -1,2 +1,7 @@
 
 canvas {   display : block;   margin : auto;}
+
+#serverMessage {
+    text-align: center;
+    margin: 5px;
+}

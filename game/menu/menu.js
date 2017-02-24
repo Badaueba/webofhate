@@ -1,22 +1,21 @@
 var Gameplay = require('../gameplay/gameplay');
 var data = require('../main/data.js');
-
+var storage = require('../services/storage');
 
 module.exports = function () {
-    var game = window.game;
+    var game = data.game;
 
     var classes = data.classes;
 
     var Menu = {
         preload : preload,
         create : create,
-        update : update,
         selection : selection,
     };
 
     function preload () {
-        game.load.image('dwight', 'game/sprites/dwight_avatar.png');
-        game.load.image('roo', 'game/sprites/roo_avatar.png');
+        game.load.image('dwight', './assets/sprites/dwight_avatar.png');
+        game.load.image('roo', './assets/sprites/roo_avatar.png');
     }
 
     var text;
@@ -33,25 +32,20 @@ module.exports = function () {
         text.setTextBounds(0, 50, 500, 100);
         text.x = Math.floor(this.width / 2 - 100);
 
-        var dwightButton = this.add.button(window.game.width / 2 , 200, 'dwight', this.selection, this);
+        var dwightButton = this.add.button(game.width / 2 , 200, 'dwight', this.selection, this);
         dwightButton.player = classes.dwight;
-        var rooButton = this.add.button(window.game.width / 2 - 90, 200, 'roo', this.selection, this);
+        var rooButton = this.add.button(game.width / 2 - 90, 200, 'roo', this.selection, this);
         rooButton.player = classes.roo;
-    }
-
-    function update () {
-        
     }
 
     function selection(button) {
         var player = button.player;
         if (!game.device.desktop) {
-            window.game.scale.startFullScreen(false);
+            data.game.scale.startFullScreen(false);
         }
-        window.game.players = classes;
         data.myself = player;
-        myself.name = window.localStorage.getItem("username");
-        window.game.state.start("Gameplay");
+        data.myself.name = storage.getItem('user');
+        game.state.start("gameplay");
     }
 
     return Menu;

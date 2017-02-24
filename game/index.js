@@ -4,6 +4,7 @@ require('./gameplay/gameplay.js');
 require('./main/home.js');
 require('./menu/menu');
 require('./http/requests');
-require('./auth/auth')();
+require('./services/storage');
+require('./auth/auth');
 
 main();

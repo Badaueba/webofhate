@@ -1,7 +1,11 @@
-module.exports = function () {
+var data;
 
-    var game = window.game;
-    var Gameplay = {
+module.exports = function () {
+    data = require('../main/data');
+
+    var game = data.game;
+
+    var gameplay = {
         preload : preload,
         create : create,
         update : update,
@@ -35,26 +39,26 @@ module.exports = function () {
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         //map
-        game.load.tilemap('desert', 'game/tilemaps/maps/depthsort.json',
+        game.load.tilemap('desert', './assets/tilemaps/maps/depthsort.json',
             null, Phaser.Tilemap.TILED_JSON);
-        game.load.image('ground_1x1', 'game/tilemaps/tiles/ground_1x1.png');
+        game.load.image('ground_1x1', './assets/tilemaps/tiles/ground_1x1.png');
 
         //players
-        game.load.spritesheet('dwight', 'game/sprites/dwight.png', 80, 80);
-        game.load.spritesheet('roo', 'game/sprites/roo.png', 80, 80);
+        game.load.spritesheet('dwight', './assets/sprites/dwight.png', 80, 80);
+        game.load.spritesheet('roo', './assets/sprites/roo.png', 80, 80);
         //fullscreen
-        game.load.image('full_screen_icon', 'game/sprites/full_screen_icon.png', 40, 40);
+        game.load.image('full_screen_icon', './assets/sprites/full_screen_icon.png', 40, 40);
 
         game.world.setBounds(0, 0, 800,450);
 
         //cursors
         if (!game.device.desktop){
-            game.load.image('vjoy_base', 'game/sprites/base.png');
-            game.load.image('vjoy_body', 'game/sprites/body.png');
-            game.load.image('vjoy_cap', 'game/sprites/cap.png');
+            game.load.image('vjoy_base', './assets/sprites/base.png');
+            game.load.image('vjoy_body', './assets/sprites/body.png');
+            game.load.image('vjoy_cap', './assets/sprites/cap.png');
         }
-        game.load.image('button_a', 'game/sprites/button_a.png');
-        game.load.image('button_b', 'game/sprites/button_b.png');
+        game.load.image('button_a', './assets/sprites/button_a.png');
+        game.load.image('button_b', './assets/sprites/button_b.png');
 
 
         socket.on("connect", function (){
