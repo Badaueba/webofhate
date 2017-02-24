@@ -7,9 +7,9 @@ module.exports = function () {
 
     window.onload = function () {
         data.game = new Phaser.Game( 600 , 450, Phaser.CANVAS, "webofhate");
-        data.game.state.add('menu', menu());
         data.game.state.add('home', home());
-        data.game.state.add('gameplay', gameplay());
+        data.game.state.add('menu', menu);
+        data.game.state.add('gameplay', gameplay);
         data.game.state.start("home");
     }   
 }

@@ -1,7 +1,7 @@
 var data;
 
 module.exports = function () {
-    data = require('../main/data');
+    data = require('../main/data'); 
 
     var game = data.game;
 
@@ -34,7 +34,10 @@ module.exports = function () {
     function preload() {
         socket = io();
         players = [];
-        group = game.add.group();
+        
+        group = new Phaser.Group(data.game, null, 'playersGroup', true, false, 0);
+        data.playersGroup = group;
+
         game.renderer.renderSession.roundPixels = true;
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -61,34 +64,45 @@ module.exports = function () {
         game.load.image('button_b', './assets/sprites/button_b.png');
 
 
-        socket.on("connect", function (){
-            console.log("im connected");
+        
+
+    }
+
+    function socketConfig() {
+
+        var connect = require('./socketFunctions/connect');
+        var listOfPlayers = require('./socketFunctions/listOfPlayers');
+        var newPlayer = require('./socketFunctions/newPlayer');
+        var removePlayer = require('./socketFunctions/removePlayer');
+        var moveEvent = require('./socketFunctions/moveEvent');
+
+        socket.on('connect', connect);
+        socket.on('list_of_players', listOfPlayers);
+        socket.on('new_player', newPlayer);
+        socket.on('remove_player', removePlayer);
+        socket.on('move_event', moveEvent);
+
+        socket.emit("join", {
+            name : data.myself.name,
+            character : data.myself.character
         });
 
-        socket.emit("join", window.game.myPlayer);
 
-        socket.on("list_of_players", function (data) {
-            console.log('list_of_players', data);
-            data.forEach(function (p) {
-                createPlayer(p);
-            });
-        });
+        // socket.on("remove_player", function (playerName) {
+        //     console.log("removing: " + playerName);
+        //     players.forEach (function (player, index) {
+        //         if (player.name == playerName) {
+        //             players.splice(index, 1);
+        //         }
+        //     });
+        // });
 
-        socket.on("remove_player", function (playerName) {
-            console.log("removing: " + playerName);
-            players.forEach (function (player, index) {
-                if (player.name == playerName) {
-                    players.splice(index, 1);
-                }
-            });
-        });
+        // socket.on("new_player", function (data) {
+        //     console.log("new_player");
+        //     createPlayer(data);
+        // });
 
-        socket.on("new_player", function (data) {
-            console.log("new_player");
-            createPlayer(data);
-        });
-
-        socket.on("movementEvent", movementEvent);
+        // socket.on("movementEvent", movementEvent);
 
     }
 
@@ -113,7 +127,6 @@ module.exports = function () {
         //set player sprite
         // randX = Math.floor(Math.random () * 700);
         // randY = Math.floor(Math.random () * 200);
-        // myPlayer = group.create(randX, randY, game.myPlayer.character);
         // myPlayer.name = window.game.myPlayer.name;
         // myPlayer.goingRight = false;
         // myPlayer.goingLeft = false;
@@ -129,88 +142,58 @@ module.exports = function () {
         var buttonB = game.add.button( game.width - 60, game.height -45, 'button_b', this.pressButtonB, this );
         buttonB.fixedToCamera = true;
 
+        socketConfig();
     }
 
-    function createPlayer(data) {
-        var playerClass = window.game.players[data.character];
-        var newPlayer = group.create(200, 200, data.character);
-        newPlayer.name = data.name;
-        newPlayer.direction = 1;
-        newPlayer.orientation = "walkRight";
-        newPlayer.animations.add("walkRight", playerClass.animations.walkRight);
-        newPlayer.animations.add("walkLeft", playerClass.animations.walkLeft);
-        newPlayer.animations.add("idle", playerClass.animations.idle );
-        players.push(newPlayer);
-
-        if (data.name === game.myPlayer.name) {
-            myPlayer = newPlayer;
-            myPlayer.goingRight = false;
-            myPlayer.goingLeft = false;
-            game.camera.follow(myPlayer);
-            game.camera.x = myPlayer.x;
-            game.camera.y = myPlayer.y;
-            console.log(newPlayer);
-        }
-        group.sort();
-        console.log('players', players);    
-    }
-
-
-    function pressButtonA () {
-        console.log("button A");
-    }
-    function pressButtonB () {
-        console.log("button B");
-    }
 
     function update() {
-        var orientation;
-        var direction = 1;  
-        //desktop
-        //LEFT
-        if (cursors.left.isDown) {
-            myPlayer.goingLeft = true;
-            direction = -1;
-        }
-        else myPlayer.goingLeft = false;
+        // var orientation;
+        // var direction = 1;  
+        // //desktop
+        // //LEFT
+        // if (cursors.left.isDown) {
+        //     myPlayer.goingLeft = true;
+        //     direction = -1;
+        // }
+        // else myPlayer.goingLeft = false;
 
-        if (cursors.right.isDown) {
-            myPlayer.goingRight = true;
-            direction = 1;
-        }
-        else myPlayer.goingRight = false;
+        // if (cursors.right.isDown) {
+        //     myPlayer.goingRight = true;
+        //     direction = 1;
+        // }
+        // else myPlayer.goingRight = false;
 
-        if (cursors.up.isDown) {
-            myPlayer.goingUp = true;
-        }
-        else myPlayer.goingUp = false;
+        // if (cursors.up.isDown) {
+        //     myPlayer.goingUp = true;
+        // }
+        // else myPlayer.goingUp = false;
 
-        if (cursors.down.isDown) {
-            myPlayer.goingDown = true;
-        }
-        else myPlayer.goingDown = false;
+        // if (cursors.down.isDown) {
+        //     myPlayer.goingDown = true;
+        // }
+        // else myPlayer.goingDown = false;
 
-        //MOVES, ANIM
+        // //MOVES, ANIM
 
-        if (!myPlayer.goingLeft && !myPlayer.goingRight && !myPlayer.goingDown && !myPlayer.goingUp)
-            // myPlayer.animations.play("idle", 8, true);
-            myPlayer.goingDown = myPlayer.goingDown;
-        else {
-            //send inputs, anim..
-            var data = {
-                name : myPlayer.name,
-                orientation : orientation,
-                direction : direction,
-                x : myPlayer.x,
-                y : myPlayer.y,
-                speed : game.myPlayer.speed
-            };
+        // if (!myPlayer.goingLeft && !myPlayer.goingRight && !myPlayer.goingDown && !myPlayer.goingUp)
+        //     // myPlayer.animations.play("idle", 8, true);
+        //     myPlayer.goingDown = myPlayer.goingDown;
+        // else {
+        //     //send inputs, anim..
+        //     var data = {
+        //         name : myPlayer.name,
+        //         orientation : orientation,
+        //         direction : direction,
+        //         x : myPlayer.x,
+        //         y : myPlayer.y,
+        //         speed : game.myPlayer.speed
+        //     };
 
-            socket.emit('playerMove', data);   
-        }
+        //     socket.emit('playerMove', data);   
+        // }
 
-        updateMoves();
-        // group.sort('y', Phaser.Group.SORT_ASCENDING);
+        // updateMoves();
+        data.playersGroup.sort('y', Phaser.Group.SORT_ASCENDING);
     }
 
     function updateMoves () {
@@ -240,16 +223,19 @@ module.exports = function () {
     function render() {
         // game.debug.text('r z-depth: ' + roo.z, 10, 20);
         // game.debug.text('h z-depth: ' + myPlayer.z, 10, 40);
-        game.debug.text('x: ' + myPlayer.x, 10, 20);
-        game.debug.text('y: ' + myPlayer.y, 10, 40);
+        // game.debug.text('x: ' + myPlayer.x, 10, 20);
+        // game.debug.text('y: ' + myPlayer.y, 10, 40);
     }
     function toggleFullscreen () {
         window.game.scale.startFullScreen(false);
     }
 
-    function join() {
-        socket.emit("join", {});
+    function pressButtonA () {
+        console.log("button A");
+    }
+    function pressButtonB () {
+        console.log("button B");
     }
 
-    return Gameplay;
+    return gameplay;
 }

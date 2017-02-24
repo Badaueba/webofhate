@@ -14,7 +14,7 @@ function init (server) {
             players.push(data);
             socket.emit("list_of_players", players);
             socket.broadcast.emit("list_of_players", players);
-            // console.log(players);
+            console.log(players);
         });
 
         socket.on('playerMove', function (data){

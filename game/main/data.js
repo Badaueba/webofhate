@@ -26,5 +26,7 @@ module.exports = {
             },
             speed : 1.5
         }
-    }
+    },
+    players : [],
+    playersGroup : {}
 }
