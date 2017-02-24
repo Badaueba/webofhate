@@ -14,12 +14,12 @@ div(class="modal fade" id="authModal"  role="dialog" aria-labelledby="authModalL
             
             .form-group
               label(class="form-control-label") Password
-              input(type="password" placeholder="type your password" ng-model="profile.userdata.password" class="form-control")
+              input(type="password" placeholder="type your password" ng-model="profile.userdata.password" class="form-control" id="password")
               
         .modal-footer
           .row
               .col-md-5
                   button(type="button" class="btn btn-primary" id="btn_signin") Signin
               .col-md-4
-                  button(type="button" class="btn btn-success") Signup
+                  button(type="button" class="btn btn-success" id="btn_signup") Signup
         p(id="serverMessage")

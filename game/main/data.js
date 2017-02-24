@@ -1,7 +1,9 @@
 module.exports = {
     myself : {},
     game : {},
-    
+    api : {
+        dev : 'http://localhost:9000'
+    },
     classes : {
         roo : {
             name : '',
