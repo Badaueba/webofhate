@@ -135,52 +135,37 @@ module.exports = function () {
         // var direction = 1;  
         // //desktop
         //LEFT
-        var direction = 1;
         var anim = "idle";
+        var directionX = 0;
+        var directionY = 0;
 
         if (cursors.left.isDown) {
-            mainData.myself.goingLeft = true;
-            anim = 'walkLeft'
-            direction = -1;
+            anim = 'walkLeft';
+            directionX = -1;
         }
-        else mainData.myself.goingLeft = false;
-
         if (cursors.right.isDown) {
-            mainData.myself.goingRight = true;
             anim = 'walkRight';
-            direction = 1;
+            directionX = 1;
         }
-        else mainData.myself.goingRight = false;
 
         if (cursors.up.isDown) {
             anim = 'walkLeft';
-            mainData.myself.goingUp = true;
-            direction = -1;
+            directionY = -1;
         }
-        else mainData.myself.goingUp = false;
-
         if (cursors.down.isDown) {
             anim = 'walkLeft';
-            mainData.myself.goingDown = true;
-            direction = 1;
+            directionY = 1;
         }
-        else mainData.myself.goingDown = false;
 
-
-        if (!mainData.myself.goingLeft && !mainData.myself.goingRight && !mainData.myself.goingDown && !mainData.myself.goingUp) {
+        if (directionX == 0 && directionY == 0) {
             anim = 'idle';
         }
         else {
             //send inputs, anim..
             var data = {
                 name : mainData.myself.name,
-                direction : direction,
-                goingRight : mainData.myself.goingRight,
-                goingLeft : mainData.myself.goingLeft,
-                goingUp : mainData.myself.goingUp,
-                goingDown : mainData.myself.goingDown,
-                x : mainData.myself.x,
-                y : mainData.myself.y,
+                directionX : directionX,
+                directionY : directionY,
                 anim : anim,
                 speed : mainData.myself.speed
             };
@@ -188,7 +173,7 @@ module.exports = function () {
             socket.emit('playerMove', data);   
         }
 
-        mainData.playersGroup.sort('y', Phaser.Group.SORT_ASCENDING);
+        
     }
 
     function updateMoves () {
