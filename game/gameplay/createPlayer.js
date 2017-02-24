@@ -19,7 +19,6 @@ module.exports = function (playerData) {
         // game.camera.follow(player);
         // game.camera.x = player.x;
         // game.camera.y = player.y;
-        console.log('myself', mainData.myself);
     }
     mainData.playersGroup.sort();
     console.log('playerSprites', mainData.players);   

@@ -86,7 +86,7 @@ module.exports = function () {
             name : data.myself.name,
             character : data.myself.character
         });
-
+        socket.emit('list_of_players');
 
         // socket.on("remove_player", function (playerName) {
         //     console.log("removing: " + playerName);

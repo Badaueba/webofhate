@@ -9,4 +9,6 @@ module.exports = function (name) {
             return;
         }
     });
+
+    console.log(mainData.players);
 }

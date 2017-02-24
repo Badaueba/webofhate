@@ -46,8 +46,6 @@ module.exports = function () {
         data.myself = player;
         data.myself.name = storage.getItem('user');
         game.state.start("gameplay");
-
-        console.log('data ---', data);
     }
 
     return Menu;

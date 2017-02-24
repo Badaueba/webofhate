@@ -13,11 +13,12 @@ function init (server) {
             socket.nickname = data.name;
             userID = socket.id;
             data.userID = userID;
-            console.log('join', data);
             players.push(data);
+            socket.broadcast.emit("new_player", data);
+        });
+
+        socket.on('list_of_players', function (){
             socket.emit("list_of_players", players);
-            socket.broadcast.emit("list_of_players", players);
-            console.log('someone join', players);
         });
 
         socket.on('playerMove', function (data){
@@ -35,8 +36,7 @@ function init (server) {
                     playerName = player.name;
                 }
             });
-            io.sockets.emit('remove_player', socket.nickname);
-            console.log('after someone exit', players);
+            io.sockets.emit('remove_player', playerName);
         });
 
     });

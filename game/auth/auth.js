@@ -31,7 +31,6 @@ module.exports = function () {
 
     btn_signin.addEventListener('click', signin);
     btn_signup.addEventListener('click', signup);
-    console.log(game);
 }
 
 function signin() {
