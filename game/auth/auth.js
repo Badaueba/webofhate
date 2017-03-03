@@ -31,9 +31,12 @@ module.exports = function () {
 
     btn_signin.addEventListener('click', signin);
     btn_signup.addEventListener('click', signup);
+    btn_signin.addEventListener('touchstart', signin, false);
+    btn_signup.addEventListener('touchstart', signup, false);
 }
 
 function signin() {
+
     var url = api.dev + '/auth/signin';
 
     userData = {
@@ -49,9 +52,7 @@ function signin() {
             var res = parsetext(r.text);
             serverMessage.innerHTML = res.message;
             if (res.success) afterSuccess();
-        });
-
-        
+        });        
 }
 
 function signup() {
@@ -69,7 +70,6 @@ function signup() {
             serverMessage.innerHTML = res.message;
             if (res.success) afterSuccess();
         });
-
 }
 
 function parsetext (text) {

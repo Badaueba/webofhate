@@ -15,7 +15,6 @@ module.exports = function () {
         pressButtonB : pressButtonB
     };
 
-
     var map;
     var tileset;
     var layer;
@@ -63,9 +62,6 @@ module.exports = function () {
         game.load.image('button_a', './assets/sprites/button_a.png');
         game.load.image('button_b', './assets/sprites/button_b.png');
 
-
-        
-
     }
 
     function socketConfig() {
@@ -98,43 +94,22 @@ module.exports = function () {
         //     game.vjoy = game.plugins.add(Phaser.Plugin.VJoy);
         //     game.vjoy.inputEnable();
         // }
-
-        //cursors
         cursors = game.input.keyboard.createCursorKeys();
-        //  Create our tilemap to walk around
         map = game.add.tilemap('desert');
         map.addTilesetImage('ground_1x1');
         layer = map.createLayer('Tile Layer 1');
-
-        //  This group will hold the main player + all the tree sprites to depth sort against
-        //PLAYER
-        //set player sprite
-        // randX = Math.floor(Math.random () * 700);
-        // randY = Math.floor(Math.random () * 200);
-        // myPlayer.name = window.game.myPlayer.name;
-        // myPlayer.goingRight = false;
-        // myPlayer.goingLeft = false;
-        // var walkingRightAnimation = myPlayer.animations.add("walkRight", game.myPlayer.animations.walkRight);
-        // var walkingLeftAnimation = myPlayer.animations.add("walkLeft", game.myPlayer.animations.walkLeft);
-        // var idleAnimation = myPlayer.animations.add("idle", game.myPlayer.animations.idle );
-
-        //CONFIG
         var fullscreen_button = game.add.button( game.camera.x + 400, 0, 'full_screen_icon', this.toggleFullscreen, this );
         fullscreen_button.fixedToCamera = true;
         var buttonA = game.add.button( game.width - 120, game.height -45, 'button_a', this.pressButtonA, this );
         buttonA.fixedToCamera = true;
         var buttonB = game.add.button( game.width - 60, game.height -45, 'button_b', this.pressButtonB, this );
         buttonB.fixedToCamera = true;
-
         socketConfig();
     }
 
 
     function update() {
-        // var orientation;
-        // var direction = 1;  
-        // //desktop
-        //LEFT
+
         var anim = "idle";
         var directionX = 0;
         var directionY = 0;
@@ -157,11 +132,7 @@ module.exports = function () {
             directionY = 1;
         }
 
-        if (directionX == 0 && directionY == 0) {
-            anim = 'idle';
-        }
-        else {
-            //send inputs, anim..
+        if (directionX != 0 || directionY != 0) {
             var data = {
                 name : mainData.myself.name,
                 directionX : directionX,
@@ -169,42 +140,35 @@ module.exports = function () {
                 anim : anim,
                 speed : mainData.myself.speed
             };
-
             socket.emit('playerMove', data);   
+        }   
+
+        else if (directionX == 0 && directionY == 0) {
+            var data = {
+                name : mainData.myself.name, 
+                directionX : directionX,
+                directionY : directionY,
+                anim : anim,
+                speed : 0
+            };
+            socket.emit('playerMove', data);
         }
 
+        mainData.playersGroup.sort('y', Phaser.Group.SORT_ASCENDING);  
+    }
+
+    function makingIdle () {
+        mainData.players.forEach(function (player, index) {
+            var anim = player.anim;
+            if (player.directionX == 0 && player.directionY == 0) {
+                mainData.players[index]['sprite'].animations.play('idle', 5, true);
+            }
+        });
         
     }
 
-    function updateMoves () {
-        for (var index = 0; index < players.length; index ++) {
-            var p = players[index];
-            players[index].x += p.direction * p.speed;
-            players[index].y += p.direction * p.speed;
-        }
-    }
-
-    function movementEvent (player) {
-
-        for (var index = 0; index < players.length; index ++) {
-            if (players[index].name == player.name){
-                players[index].animations.play(player.orientation);
-                players[index].x = player.x;
-                players[index].y = player.y;
-                players[index].direction = player.direction;
-                players[index].scale.x = player.orientation;
-                return;
-            }
-
-        }
-    }
-
-
     function render() {
-        // game.debug.text('r z-depth: ' + roo.z, 10, 20);
-        // game.debug.text('h z-depth: ' + myPlayer.z, 10, 40);
-        // game.debug.text('x: ' + myPlayer.x, 10, 20);
-        // game.debug.text('y: ' + myPlayer.y, 10, 40);
+    
     }
     function toggleFullscreen () {
         window.game.scale.startFullScreen(false);

@@ -26,7 +26,6 @@ function init (server) {
         });
 
         socket.on('playerMove', function (data){
-            console.log('playerMove', data.name);
             socket.broadcast.emit('move_event', data);
             socket.emit('move_event', data);
         });
@@ -42,7 +41,5 @@ function init (server) {
             });
             io.sockets.emit('remove_player', playerName);
         });
-
     });
-
 }
