@@ -87,7 +87,6 @@ module.exports = function () {
     }
 
     function create() {
-
         //joystick
         //pad
         // if(!game.device.desktop) {
@@ -155,16 +154,6 @@ module.exports = function () {
         }
 
         mainData.playersGroup.sort('y', Phaser.Group.SORT_ASCENDING);  
-    }
-
-    function makingIdle () {
-        mainData.players.forEach(function (player, index) {
-            var anim = player.anim;
-            if (player.directionX == 0 && player.directionY == 0) {
-                mainData.players[index]['sprite'].animations.play('idle', 5, true);
-            }
-        });
-        
     }
 
     function render() {
