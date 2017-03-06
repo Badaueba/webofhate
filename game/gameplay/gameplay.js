@@ -2,6 +2,7 @@ var mainData;
 
 module.exports = function () {
     mainData = require('../main/data'); 
+    var createBMD = require('../graphicHelpers/createBMD');
 
     var game = mainData.game;
 
@@ -23,11 +24,14 @@ module.exports = function () {
     var players;
 
     var group;
+    var UIgroup;
     var oldY = 0;
     var cursors;
     var locs = [];
     var randX;
     var randY;
+    var life;
+    var totalLife;
     var socket;
 
     function preload() {
@@ -35,6 +39,7 @@ module.exports = function () {
         players = [];
         
         group = new Phaser.Group(mainData.game, null, 'playersGroup', true, false, 0);
+        UIgroup = new Phaser.Group(mainData.game, null, 'UIgroup', true, false, 0)
         mainData.playersGroup = group;
 
         game.renderer.renderSession.roundPixels = true;
@@ -48,6 +53,10 @@ module.exports = function () {
         //players
         game.load.spritesheet('dwight', './assets/sprites/dwight.png', 80, 80);
         game.load.spritesheet('roo', './assets/sprites/roo.png', 80, 80);
+
+        game.load.image('dwight-avatar', './assets/sprites/dwight_avatar.png');
+        game.load.image('roo-avatar', './assets/sprites/roo_avatar.png');
+
         //fullscreen
         game.load.image('full_screen_icon', './assets/sprites/full_screen_icon.png', 40, 40);
 
@@ -97,13 +106,42 @@ module.exports = function () {
         map = game.add.tilemap('desert');
         map.addTilesetImage('ground_1x1');
         layer = map.createLayer('Tile Layer 1');
-        var fullscreen_button = game.add.button( game.camera.x + 400, 0, 'full_screen_icon', this.toggleFullscreen, this );
+        var fullscreen_button = game.add.button( game.camera.x + 550, 0, 'full_screen_icon', this.toggleFullscreen, this );
         fullscreen_button.fixedToCamera = true;
         var buttonA = game.add.button( game.width - 120, game.height -45, 'button_a', this.pressButtonA, this );
         buttonA.fixedToCamera = true;
         var buttonB = game.add.button( game.width - 60, game.height -45, 'button_b', this.pressButtonB, this );
         buttonB.fixedToCamera = true;
+        UIgroup.add(fullscreen_button);
+        UIgroup.add(buttonA);
+        UIgroup.add(buttonB);
+
+        var playerAvatar = this.game.add.sprite(0, 0, mainData.myself.character + '-avatar');
+        UIgroup.add(playerAvatar);
+
+        var bmd = createBMD(160, 32, "#4d394b");
+        var bglife = this.game.add.sprite( playerAvatar.width + (bmd.width / 2),
+            bmd.height/2, bmd);
+        bglife.anchor.set(0.5);
+        UIgroup.add(bglife);
+
+        bmd = createBMD(154, 24, "#2af20c");
+        var widthLife = new Phaser.Rectangle(0, 0, bmd.width, bmd.height);
+        totalLife = bmd.width;
+        life = this.game.add.sprite(bglife.x - (bglife.width / 2 - 2), bglife.y + 2, bmd);
+        life.anchor.y = 0.5;
+        life.cropEnabled = true;   
+        UIgroup.add(life);
+        game.world.bringToTop(UIgroup);
+
         socketConfig();
+
+        KeyQ = game.input.keyboard.addKey(Phaser.Keyboard.Q);
+        KeyW = game.input.keyboard.addKey(Phaser.Keyboard.W);
+        KeyE = game.input.keyboard.addKey(Phaser.Keyboard.E);
+        
+        keyA = game.input.keyboard.addKey(Phaser.Keyboard.A);
+        keyA.onUp.add(cropHealth, this);
     }
 
 
@@ -130,35 +168,43 @@ module.exports = function () {
             anim = 'walkLeft';
             directionY = 1;
         }
-
-        if (directionX != 0 || directionY != 0) {
-            var data = {
-                name : mainData.myself.name,
-                directionX : directionX,
-                directionY : directionY,
-                anim : anim,
-                speed : mainData.myself.speed
-            };
-            socket.emit('playerMove', data);   
-        }   
-
-        else if (directionX == 0 && directionY == 0) {
-            var data = {
-                name : mainData.myself.name, 
-                directionX : directionX,
-                directionY : directionY,
-                anim : anim,
-                speed : 0
-            };
-            socket.emit('playerMove', data);
+        
+        if (KeyQ.isDown) {
+            console.log('Q');
+            anim = 'basic_attack';
         }
-
+        if (KeyW.isDown) {
+            anim = 'second_attack';
+        }
+        if (KeyE.isDown) {
+            anim = 'especial1';
+        }
+        var data = {
+            name : mainData.myself.name,
+            directionX : directionX,
+            directionY : directionY,
+            anim : anim,
+            speed : mainData.myself.speed
+        };
+        socket.emit('playerMove', data); 
         mainData.playersGroup.sort('y', Phaser.Group.SORT_ASCENDING);  
+
     }
 
     function render() {
     
     }
+    function cropHealth (demage) {
+        demage = 0.01;
+        var x = life.x;
+        var y = life.y;
+        var w = life.width;
+        var h = life.height;
+        var cropW = w - (demage * totalLife);
+        var cropRect = new Phaser.Rectangle(0, 0, cropW, h);
+        life.crop(cropRect);
+    }
+
     function toggleFullscreen () {
         window.game.scale.startFullScreen(false);
     }
