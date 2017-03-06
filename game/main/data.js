@@ -2,7 +2,8 @@ module.exports = {
     myself : {},
     game : {},
     api : {
-        dev : 'http://localhost:9000'
+        dev : 'http://localhost:9000',
+        prod : 'http://webofhate.herokuapp.com'
     },
     classes : {
         roo : {
