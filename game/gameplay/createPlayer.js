@@ -20,9 +20,9 @@ module.exports = function (playerData) {
 
     if (playerData.name === mainData.myself.name) {
         mainData.myself.sprite = player.sprite;
-        // game.camera.follow(player);
-        // game.camera.x = player.x;
-        // game.camera.y = player.y;
+        // mainData.game.camera.follow(player);
+        // mainData.game.camera.x = player.x;
+        // mainData.game.camera.y = player.y;
     }
     mainData.playersGroup.sort();
     console.log('playerSprites', mainData.players);   
