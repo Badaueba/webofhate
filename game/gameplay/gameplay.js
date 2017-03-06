@@ -135,6 +135,13 @@ module.exports = function () {
         game.world.bringToTop(UIgroup);
 
         socketConfig();
+
+        KeyQ = game.input.keyboard.addKey(Phaser.Keyboard.Q);
+        KeyW = game.input.keyboard.addKey(Phaser.Keyboard.W);
+        KeyE = game.input.keyboard.addKey(Phaser.Keyboard.E);
+        
+        keyA = game.input.keyboard.addKey(Phaser.Keyboard.A);
+        keyA.onUp.add(cropHealth, this);
     }
 
 
@@ -161,42 +168,26 @@ module.exports = function () {
             anim = 'walkLeft';
             directionY = 1;
         }
-
-        if (directionX != 0 || directionY != 0) {
-            var data = {
-                name : mainData.myself.name,
-                directionX : directionX,
-                directionY : directionY,
-                anim : anim,
-                speed : mainData.myself.speed
-            };
-            socket.emit('playerMove', data);   
-        }   
-
-        else if (directionX == 0 && directionY == 0) {
-            var data = {
-                name : mainData.myself.name, 
-                directionX : directionX,
-                directionY : directionY,
-                anim : anim,
-                speed : 0
-            };
-            socket.emit('playerMove', data);
+        
+        if (KeyQ.isDown) {
+            console.log('Q');
+            anim = 'basic_attack';
         }
-
+        if (KeyW.isDown) {
+            anim = 'second_attack';
+        }
+        if (KeyE.isDown) {
+            anim = 'especial1';
+        }
+        var data = {
+            name : mainData.myself.name,
+            directionX : directionX,
+            directionY : directionY,
+            anim : anim,
+            speed : mainData.myself.speed
+        };
+        socket.emit('playerMove', data); 
         mainData.playersGroup.sort('y', Phaser.Group.SORT_ASCENDING);  
-
-        key = game.input.keyboard.addKey(Phaser.Keyboard.A);
-        key.onUp.add(cropHealth, this);
-
-        // var canCroup = false;
-        // if (cursors.left.isDown) {
-        //     canCroup = true;
-        // };
-
-        // if (canCroup) {
-        //     cropHealth(0.05);
-        // }
 
     }
 
@@ -204,7 +195,7 @@ module.exports = function () {
     
     }
     function cropHealth (demage) {
-        demage = 0.05;
+        demage = 0.01;
         var x = life.x;
         var y = life.y;
         var w = life.width;
@@ -212,7 +203,6 @@ module.exports = function () {
         var cropW = w - (demage * totalLife);
         var cropRect = new Phaser.Rectangle(0, 0, cropW, h);
         life.crop(cropRect);
-     
     }
 
     function toggleFullscreen () {
