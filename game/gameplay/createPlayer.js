@@ -1,6 +1,7 @@
 var mainData = require('../main/data');
 module.exports = function (playerData) {
 
+    console.log('playerData', playerData);
     game = mainData.game;
     var playerClass = mainData.classes[playerData.character];
     var player = {};
@@ -20,6 +21,11 @@ module.exports = function (playerData) {
     player.sprite.animations.add("basic_attack", playerClass.animations.basic_attack);
     player.sprite.animations.add("second_attack", playerClass.animations.second_attack);
     player.sprite.animations.add("especial1", playerClass.animations.especial1);
+
+    //isso nao ta funcionando porque o update nao para de emitir evento 
+    //move, ai manda directionX = 0
+    
+    //player['sprite'].scale.x = playerData.directionX;
 
     mainData.players.push(player);
 

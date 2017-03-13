@@ -1,3 +1,3 @@
 module.exports = {
-    api : "https://webofhate.herokuapp.com"
+    api : "http://localhost:9000"
 };

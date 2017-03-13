@@ -3,8 +3,13 @@ var mainData = require('../../main/data');
 module.exports = function (data) {
     for (var index = 0; index < mainData.players.length; index ++) {
         if (mainData.players[index].name == data.name){
-            mainData.players[index]['sprite'].x += data.directionX * data.speed;
-            mainData.players[index]['sprite'].y += data.directionY * data.speed;
+            
+            // mainData.players[index]['sprite'].x += data.directionX * data.speed;
+            // mainData.players[index]['sprite'].y += data.directionY * data.speed;
+
+            mainData.players[index]['sprite'].x += data.x;
+            mainData.players[index]['sprite'].y += data.y;
+
             if (data.directionX !== 0)
                 mainData.players[index]['sprite'].scale.x = data.directionX;
 
