@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build" : "gulp replace-env --env prod && gulp js",
     "start": "NODE_ENV=prod node server.js",
     "watch": "NODE_ENV=dev nodemon server.js",
     "postinstall": "bower install"
