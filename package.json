@@ -17,7 +17,6 @@
     "bower": "^1.8.0",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
-    "gulp-replace-task": "^0.11.0",
     "jsonwebtoken": "^7.0.1",
     "mongoose": "^4.5.3",
     "morgan": "^1.7.0",
@@ -27,11 +26,14 @@
   },
   "devDependencies": {
     "browserify": "^14.1.0",
+    "gulp": "^3.9.1",
     "gulp-rename": "^1.2.2",
+    "gulp-replace-task": "^0.11.0",
     "gulp-uglify": "^2.0.1",
     "gulp-util": "^3.0.8",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.8.0"
+    "watchify": "^3.8.0",
+    "yargs": "^7.0.2"
   }
 }
