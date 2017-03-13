@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=prod gulp replace --env prod && gulp js && node node server.js",
+    "start": "NODE_ENV=prod gulp && node node server.js",
     "watch": "NODE_ENV=dev nodemon server.js",
     "postinstall": "bower install"
   },
@@ -32,18 +32,6 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.9.0",
-    "yargs": "^7.0.2"
-  },
-  "devDependencies": {
-    "browserify": "^14.1.0",
-    "gulp": "^3.9.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-replace-task": "^0.11.0",
-    "gulp-uglify": "^2.0.1",
-    "gulp-util": "^3.0.8",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.8.0",
     "yargs": "^7.0.2"
   }
 }
