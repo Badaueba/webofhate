@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "NODE_ENV=prod node server.js",
     "watch": "NODE_ENV=dev nodemon server.js",
-    "postinstall": "bower install && gulp js"
+    "postinstall": "bower install"
   },
   "author": "badaueba <alan.demit@hotmail.com>",
   "license": "ISC",
