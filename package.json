@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=prod gulp && node node server.js",
+    "start": "NODE_ENV=prod gulp js && node node server.js",
     "watch": "NODE_ENV=dev nodemon server.js",
     "postinstall": "bower install"
   },
