@@ -37,7 +37,9 @@ module.exports = function () {
 
 function signin() {
 
-    var url = api.dev + '/auth/signin';
+    var url = api + '/auth/signin';
+
+    console.log('api', api);
 
     userData = {
         username : input_username.value,
@@ -56,7 +58,7 @@ function signin() {
 }
 
 function signup() {
-    var url = api.dev + '/auth/signup';
+    var url = api + '/auth/signup';
     
     userData = {
         username : input_username.value,

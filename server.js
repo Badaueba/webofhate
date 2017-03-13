@@ -40,5 +40,6 @@ var socket = require("./app/socket/route/socket");
 
 server.listen(deployConfig.port, function () {
     socket.init(server);
+    console.log(process.env.NODE_ENV);
     console.log("listening on " + deployConfig.port );
 });

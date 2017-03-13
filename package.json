@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
+    "start": "NODE_ENV=prod gulp replace --env prod && gulp js && node node server.js",
+    "watch": "NODE_ENV=dev nodemon server.js",
     "postinstall": "bower install"
   },
   "author": "badaueba <alan.demit@hotmail.com>",
@@ -13,15 +14,16 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
+    "bower": "^1.8.0",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
+    "gulp-replace-task": "^0.11.0",
     "jsonwebtoken": "^7.0.1",
     "mongoose": "^4.5.3",
     "morgan": "^1.7.0",
     "pug": "^2.0.0-beta11",
     "socket.io": "^1.7.2",
-    "superagent": "^3.5.0",
-    "bower": "^1.8.0"
+    "superagent": "^3.5.0"
   },
   "devDependencies": {
     "browserify": "^14.1.0",

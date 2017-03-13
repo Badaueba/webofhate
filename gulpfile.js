@@ -7,10 +7,38 @@ var buffer = require('vinyl-buffer');
 var browserify = require('browserify');
 var watchify = require('watchify');
 
+var replace = require("gulp-replace-task");
+var args = require("yargs").argv;
+var fs = require('fs');
+
+
 var path = {
     src : './game/',
     dest : './public/'
 };
+
+
+gulp.task('replace-env', function () {
+    //get the environment from the command line
+    var env = args.env || 'dev';
+    //read the settings from the right file
+    var filename = env +'.json';
+    var settings = JSON.parse(
+        fs.readFileSync('./game/env/' + filename, 'utf8'));
+
+    console.log(settings);
+    //trocando os valores de @@apiUrl pelo apiUrl do arquivo json
+    gulp.src('game/env/src/config.js')
+        .pipe(replace ({
+            patterns : [
+                {
+                    match : 'api',
+                    replacement : settings.api
+                }
+            ]
+        }))
+        .pipe(gulp.dest('game/env/'));
+});
 
 function browserifyTask() {
     return browserify({
@@ -47,7 +75,7 @@ function bundle (bundler){
 }
 
 gulp.task('js', function () {
-    
+
     // var watcher = watchify(browserifyTask(path.src, watchify.args));
     var watcher = watchify(browserify({
         cache: {},
@@ -69,4 +97,4 @@ gulp.task('js', function () {
     });
 });
 
-gulp.task('default', ['js']);
+gulp.task('default', [ 'replace-env', 'js']);

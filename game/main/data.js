@@ -1,10 +1,7 @@
 module.exports = {
     myself : {},
     game : {},
-    api : {
-        dev : 'http://localhost:9000',
-        prod : 'http://webofhate.herokuapp.com'
-    },
+    api : require('../env/config').api,
     classes : {
         roo : {
             name : '',
