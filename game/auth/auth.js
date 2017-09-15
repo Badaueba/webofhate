@@ -81,5 +81,8 @@ function parsetext (text) {
 function afterSuccess() {
     game.state.start('menu');
     storage.setItem('user', input_username.value);
-    $('authModal').hide();
+    console.log("afterSuccess");
+    jQuery('authModal').modal('toggle');
+    $('.modal.in').modal('hide'); 
+    console.log("modal", jQuery("authModal"));
 }
