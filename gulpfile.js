@@ -22,11 +22,12 @@ gulp.task('replace-env', function () {
     //get the environment from the command line
     var env = args.env || 'dev';
     //read the settings from the right file
+    console.log("running: ", env);
     var filename = env +'.json';
     var settings = JSON.parse(
         fs.readFileSync('./game/env/' + filename, 'utf8'));
 
-    console.log(settings);
+    console.log("settings", settings);
     //trocando os valores de @@apiUrl pelo apiUrl do arquivo json
     gulp.src('game/env/src/config.js')
         .pipe(replace ({
