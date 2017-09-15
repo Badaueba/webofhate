@@ -6,4 +6,11 @@
 
 ### Run 
 
-* 
+* npm install
+
+* gulp --env < env_name >  
+> gulp --env prod
+
+- npm run watch 
+
+
