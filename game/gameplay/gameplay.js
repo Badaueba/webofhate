@@ -42,7 +42,7 @@ module.exports = function () {
         UIgroup = new Phaser.Group(mainData.game, null, 'UIgroup', true, false, 0)
         mainData.playersGroup = group;
 
-        game.renderer.renderSession.roundPixels = true;
+        // game.renderer.renderSession.roundPixels = true;
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         //map

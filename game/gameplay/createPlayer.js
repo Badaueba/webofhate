@@ -9,6 +9,7 @@ module.exports = function (playerData) {
 
     player.name = playerData.name;
     player.direction = 1;
+    player.sprite.anchor.setTo(.5, .5);
     player.goingLeft = false;
     player.goingRight = true;
     player.goingUp = false;

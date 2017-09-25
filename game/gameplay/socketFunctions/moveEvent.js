@@ -12,7 +12,7 @@ module.exports = function (data) {
 
             if (data.directionX !== 0)
                 mainData.players[index]['sprite'].scale.x = data.directionX;
-
+                console.log("scale", mainData.players[index]['sprite'].scale.x);
             if (data.anim != mainData.players[index]['sprite'].animations.currentAnim.name) {
                 mainData.players[index]['sprite'].animations.play(data.anim, 5, true);
             }
