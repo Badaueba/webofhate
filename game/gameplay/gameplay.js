@@ -120,8 +120,8 @@ module.exports = function () {
         var playerAvatar = this.game.add.sprite(0, 0, mainData.myself.character + '-avatar');
         UIgroup.add(playerAvatar);
 
-
-        var healthBar = makeHealthBar(100, 16, 0, 0, UIgroup);
+        console.log("playerAvatar", playerAvatar)
+        var healthBar = makeHealthBar(100, 16, 0, playerAvatar.position.x + playerAvatar.height, UIgroup);
         
         game.world.bringToTop(UIgroup);
 
