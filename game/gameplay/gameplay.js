@@ -3,6 +3,7 @@ var mainData;
 module.exports = function () {
     mainData = require('../main/data'); 
     var createBMD = require('../graphicHelpers/createBMD');
+    var makeHealthBar = require("./healthBar");
 
     var game = mainData.game;
 
@@ -42,7 +43,7 @@ module.exports = function () {
         UIgroup = new Phaser.Group(mainData.game, null, 'UIgroup', true, false, 0)
         mainData.playersGroup = group;
 
-        game.renderer.renderSession.roundPixels = true;
+        // game.renderer.renderSession.roundPixels = true;
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         //map
@@ -119,19 +120,9 @@ module.exports = function () {
         var playerAvatar = this.game.add.sprite(0, 0, mainData.myself.character + '-avatar');
         UIgroup.add(playerAvatar);
 
-        var bmd = createBMD(160, 32, "#4d394b");
-        var bglife = this.game.add.sprite( playerAvatar.width + (bmd.width / 2),
-            bmd.height/2, bmd);
-        bglife.anchor.set(0.5);
-        UIgroup.add(bglife);
-
-        bmd = createBMD(154, 24, "#2af20c");
-        var widthLife = new Phaser.Rectangle(0, 0, bmd.width, bmd.height);
-        totalLife = bmd.width;
-        life = this.game.add.sprite(bglife.x - (bglife.width / 2 - 2), bglife.y + 2, bmd);
-        life.anchor.y = 0.5;
-        life.cropEnabled = true;   
-        UIgroup.add(life);
+        console.log("playerAvatar", playerAvatar)
+        var healthBar = makeHealthBar(100, 16, 0, playerAvatar.position.x + playerAvatar.height, UIgroup);
+        
         game.world.bringToTop(UIgroup);
 
         socketConfig();

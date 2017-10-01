@@ -53,7 +53,7 @@ function signin() {
         .end(function(err, r){
             var res = parsetext(r.text);
             serverMessage.innerHTML = res.message;
-            if (res.success) afterSuccess();
+            if (res.success) afterSuccess(2000);
         });        
 }
 
@@ -70,7 +70,7 @@ function signup() {
         .end(function (err, r){
             var res = parsetext(r.text);
             serverMessage.innerHTML = res.message;
-            if (res.success) afterSuccess();
+            if (res.success) afterSuccess(2000);
         });
 }
 
@@ -78,11 +78,15 @@ function parsetext (text) {
     return JSON.parse(text);
 }
 
-function afterSuccess() {
-    game.state.start('menu');
-    storage.setItem('user', input_username.value);
-    console.log("afterSuccess");
-    jQuery('authModal').modal('toggle');
-    $('.modal.in').modal('hide'); 
-    console.log("modal", jQuery("authModal"));
+function afterSuccess(time) {
+    var _time = time || 0;
+    
+    setTimeout(function () {
+        game.state.start('menu');
+        storage.setItem('user', input_username.value);
+        jQuery('authModal').modal('toggle');
+        $('.modal.in').modal('hide'); 
+    }, _time)
+    
+    
 }
