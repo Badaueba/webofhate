@@ -1,8 +1,8 @@
-var data = require('./data.js');
+var mainData = require('./data.js');
 var auth = require('../auth/auth.js');
 
 module.exports = function () {
-    var game = data.game;
+    var game = mainData.game;
     var home = {
         preload : preload,
         create : create,
@@ -14,7 +14,8 @@ module.exports = function () {
     }
 
     function create () {
-
+        
+        
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
         this.scale.forceOrientation(true, false);
         var signin_button =
