@@ -2,8 +2,9 @@ var mainData;
 
 module.exports = function () {
     mainData = require('../main/data'); 
-    var createBMD = require('../graphicHelpers/createBMD');
     var makeHealthBar = require("./healthBar");
+    var cropHealth = require("./cropHealth");
+
 
     var game = mainData.game;
 
@@ -26,23 +27,26 @@ module.exports = function () {
 
     var group;
     var UIgroup;
+
     var oldY = 0;
     var cursors;
     var locs = [];
     var randX;
     var randY;
     var life;
-    var totalLife;
     var socket;
+    var totalLife;
+    var healthBar;
 
     function preload() {
         socket = io();
         players = [];
-        
-        group = new Phaser.Group(mainData.game, null, 'playersGroup', true, false, 0);
-        UIgroup = new Phaser.Group(mainData.game, null, 'UIgroup', true, false, 0)
-        mainData.playersGroup = group;
 
+        mainData.playersGroup = new Phaser.Group(mainData.game, null, 'playersGroup', true, false, 0);
+        mainData.UIgroup = new Phaser.Group(mainData.game, null, 'UIgroup', true, false, 0)
+        group = mainData.playersGroup;
+        UIgroup = mainData.UIgroup;
+        console.log("maindDataGroup", mainData.UIgroup);
         // game.renderer.renderSession.roundPixels = true;
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -113,6 +117,7 @@ module.exports = function () {
         buttonA.fixedToCamera = true;
         var buttonB = game.add.button( game.width - 60, game.height -45, 'button_b', this.pressButtonB, this );
         buttonB.fixedToCamera = true;
+        console.log("UIgroup", UIgroup);
         UIgroup.add(fullscreen_button);
         UIgroup.add(buttonA);
         UIgroup.add(buttonB);
@@ -121,8 +126,8 @@ module.exports = function () {
         UIgroup.add(playerAvatar);
 
 
-        var healthBar = makeHealthBar(100, 16, 0, 0, UIgroup);
-        
+        healthBar = makeHealthBar(100, 16, 0, playerAvatar.position.x + playerAvatar.height, UIgroup, true);
+        totalLife = healthBar.barSprite.width;
         game.world.bringToTop(UIgroup);
 
         socketConfig();
@@ -132,9 +137,12 @@ module.exports = function () {
         KeyE = game.input.keyboard.addKey(Phaser.Keyboard.E);
         
         keyA = game.input.keyboard.addKey(Phaser.Keyboard.A);
-        keyA.onUp.add(cropHealth, this);
+        keyA.onUp.add(cropHealthHandler, this);
     }
 
+    function cropHealthHandler() {
+        cropHealth(0.1, healthBar.barSprite, totalLife);
+    }
 
     function update() {
 
@@ -185,16 +193,7 @@ module.exports = function () {
     function render() {
     
     }
-    function cropHealth (demage) {
-        demage = 0.01;
-        var x = life.x;
-        var y = life.y;
-        var w = life.width;
-        var h = life.height;
-        var cropW = w - (demage * totalLife);
-        var cropRect = new Phaser.Rectangle(0, 0, cropW, h);
-        life.crop(cropRect);
-    }
+   
 
     function toggleFullscreen () {
         window.game.scale.startFullScreen(false);

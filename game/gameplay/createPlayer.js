@@ -1,4 +1,6 @@
 var mainData = require('../main/data');
+var healthBar = require("./healthBar");
+
 module.exports = function (playerData) {
 
     console.log('playerData', playerData);
@@ -23,11 +25,6 @@ module.exports = function (playerData) {
     player.sprite.animations.add("second_attack", playerClass.animations.second_attack);
     player.sprite.animations.add("especial1", playerClass.animations.especial1);
 
-    //isso nao ta funcionando porque o update nao para de emitir evento 
-    //move, ai manda directionX = 0
-    
-    //player['sprite'].scale.x = playerData.directionX;
-
     mainData.players.push(player);
 
     if (playerData.name === mainData.myself.name) {
@@ -37,5 +34,4 @@ module.exports = function (playerData) {
         // mainData.game.camera.y = player.y;
     }
     mainData.playersGroup.sort();
-    console.log('playerSprites', mainData.players);   
 }
