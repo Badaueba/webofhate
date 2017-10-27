@@ -6,9 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "gulp replace-env --env prod && gulp js",
-    "start": "NODE_ENV=prod & node server.js",
-    "dev": "cross-env NODE_ENV=dev & nodemon server.js",
-    "local-dev": "cross-env NODE_ENV=local & nodemon server.js",
+    "prod": "NODE_ENV=prod & node server.js",
+    "start": "cross-env NODE_ENV=dev & nodemon server.js",
     "postinstall": "bower install"
   },
   "author": "badaueba <alan.demit@hotmail.com>",

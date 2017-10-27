@@ -1,7 +1,7 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var morgan = require('morgan');
-var dataConfig = require('./config/data_config');
+var dataConfig = require('./config/index');
 var deployConfig = require('./config/deploy_config');
 var cookieParser = require('cookie-parser');
 var app = express();
@@ -31,7 +31,6 @@ var auth = require("./app/auth/route/auth");
 app.use("/auth", auth);
 
 app.use("*", function (req, res) {
-    // res.sendFile(path.join( __dirname + "/public/index.html"));
     res.render(__dirname + '/app/views/index', {title : 'web of hate | multiplayer game'});
 })
 

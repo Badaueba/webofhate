@@ -1,4 +1,12 @@
 node_modules/
+
 .idea/
+.c9
+
+config/prod.js
+config/c9.js
+game/env/c9.json
+game/env/prod.json
+
 public/lib/
 public/webofhate.js
