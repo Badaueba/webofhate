@@ -31,7 +31,7 @@ var auth = require("./app/auth/route/auth");
 app.use("/auth", auth);
 
 app.use("*", function (req, res) {
-    res.render(__dirname + '/app/views/index', {title : 'web of hate | multiplayer game'});
+    res.render(__dirname + '/app/views/index', {title : "Web Of Hate | Multiplayer Beat'm Up Game"});
 })
 
 var server = http.createServer(app);

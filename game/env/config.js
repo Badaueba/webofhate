@@ -1,3 +1,3 @@
 module.exports = {
-    api : "http://localhost:9000"
+    api : "https://webofhate-badaueba.c9users.io"
 };
