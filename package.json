@@ -10,6 +10,9 @@
     "start": "cross-env NODE_ENV=dev & nodemon server.js",
     "postinstall": "bower install"
   },
+  "resolutions": {
+    "graceful-fs": "^4.2.4"
+  },
   "author": "badaueba <alan.demit@hotmail.com>",
   "license": "ISC",
   "dependencies": {
