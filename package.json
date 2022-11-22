@@ -23,7 +23,7 @@
     "jsonwebtoken": "^7.0.1",
     "mongoose": "^4.5.3",
     "pug": "^3.0.1",
-    "socket.io": "^1.7.2",
+    "socket.io": "^4.5.3",
     "superagent": "^3.6.0"
   },
   "devDependencies": {
